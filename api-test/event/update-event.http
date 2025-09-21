@@ -1,0 +1,9 @@
+PUT http://localhost:8080/event/1
+content-type: application/json
+
+{
+  "name": "Updated Team Meeting",
+  "description": "Discuss project updates and timelines",
+  "dateTime": "2024-07-01T11:00:00Z",
+  "location": "Conference Room B"
+}

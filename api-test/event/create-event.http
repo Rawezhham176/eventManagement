@@ -1,0 +1,10 @@
+POST http://localhost:8080/event
+content-type: application/json
+authorization: wrfwegwrthezhetzh
+
+{
+  "Name": "Team Meeting",
+  "description": "Discuss project updates",
+  "dateTime": "2024-07-01T10:00:00Z",
+  "location": "Conference Room A"
+}
