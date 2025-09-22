@@ -24,7 +24,7 @@ func InitDB() {
 func createTables() {
 	createUserTable := `
        CREATE TABLE IF NOT EXISTS users (
-           id INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
+           id INTEGER PRIMARY KEY AUTOINCREMENT,
            email TEXT NOT NULL,
            password TEXT NOT NULL,
        )`
