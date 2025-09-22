@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.25"
+          go-version: "1.25"      # zu deinem go.mod passend
       - name: Cache Go modules
         uses: actions/cache@v4
         with:
@@ -24,12 +24,11 @@ jobs:
             ~/.cache/go-build
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: ${{ runner.os }}-go-
-      - name: Install golangci-lint
+      - name: Install latest golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
-          version: latest
-      - name: Run linter
-        run: golangci-lint run ./...
+          version: latest          # holt die neueste Binary (i. d. R. mit aktuellem Go gebaut)
+          args: --timeout=5m
 
   unit-tests:
     name: Unit Tests (matrix)
