@@ -77,6 +77,24 @@ func GetEventsByCategory(category string) (*Event, error) {
 	return &event, nil
 }
 
+func GetEventsByUserId(userId int64) (*[]Event, error) {
+	query := `SELECT * FROM events WHERE user_id = ?`
+	rows, err := db.DB.Query(query, userId)
+	if err != nil {
+		return nil, err
+	}
+	var events []Event
+	for rows.Next() {
+		var event Event
+		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserID)
+		if err != nil {
+			return nil, err
+		}
+		events = append(events, event)
+	}
+	return &events, nil
+}
+
 func GetUpcomingEvents(startDate, endDate string) ([]Event, error) {
 	query := `SELECT * FROM events WHERE dateTime BETWEEN ? AND ?`
 	rows, err := db.DB.Query(query, startDate, endDate)
@@ -198,4 +216,54 @@ func (e Event) CancelEvent(userID int64) error {
 
 	_, err = stmt.Exec(e.ID, userID)
 	return err
+}
+
+func (e Event) GetRegistrationList(eventID int64) ([]Registration, error) {
+	query := `SELECT * FROM registrations WHERE event_id = ?`
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return nil, err
+	}
+	defer func(stmt *sql.Stmt) {
+		err := stmt.Close()
+		if err != nil {
+			return
+		}
+	}(stmt)
+
+	row, err := stmt.Query(eventID)
+	if err != nil {
+		return nil, err
+	}
+
+	var registrationList []Registration
+
+	for row.Next() {
+		var registration Registration
+		err := row.Scan(&registration.ID, &registration.UserID, &registration.EventID)
+		if err != nil {
+			return nil, err
+		}
+		registrationList = append(registrationList, registration)
+	}
+
+	return registrationList, nil
+}
+
+func GetRegistrationsByUserId(userID int64) ([]Registration, error) {
+	query := `SELECT FROM registrations WHERE user_id = ?`
+	rows, err := db.DB.Query(query, userID)
+	if err != nil {
+		return nil, err
+	}
+	var registrationList []Registration
+	for rows.Next() {
+		var registration Registration
+		err := rows.Scan(&registration.ID, &registration.UserID, &registration.EventID)
+		if err != nil {
+			return nil, err
+		}
+		registrationList = append(registrationList, registration)
+	}
+	return registrationList, nil
 }

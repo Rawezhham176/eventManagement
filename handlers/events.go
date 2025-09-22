@@ -173,3 +173,16 @@ func GetUpcomingEvents(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"events": events})
 }
+
+func GetEventsByUserId(c *gin.Context) {
+	userId := c.GetInt64("userId")
+
+	events, err := model.GetEventsByUserId(userId)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"Could not find event": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"events": events})
+}
